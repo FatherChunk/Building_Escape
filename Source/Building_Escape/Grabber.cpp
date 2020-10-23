@@ -58,8 +58,23 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		0,
 		5.f	
 	);
-	// Ray Cast to x distance (reach)
 
-	// See what it hits
+	FHitResult Hit;
+	// Ray Cast to x distance (reach)
+	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
+
+	GetWorld()->LineTraceSingleByObjectType(
+		OUT Hit,
+		PlayerViewPointLocation,
+		LineTraceEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+		TraceParams
+	);
+
+	AActor* ActorHit = Hit.GetActor();
+	if (ActorHit) // See what it hits
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Object hit: %s"), *ActorHit->GetName());
+	}
 }
 
