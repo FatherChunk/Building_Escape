@@ -39,4 +39,5 @@ private:
 
 	//Return first actor in reach with physics body
 	FHitResult GetFirstPhysicsBodyInReach() const;
+	
 };
