@@ -64,12 +64,10 @@ void UGrabber::Grab()
 	}
 }
 
-
 void UGrabber::Release()
 {
 	PhysicsHandle->ReleaseComponent();
 }
-
 
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
