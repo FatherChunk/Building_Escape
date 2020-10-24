@@ -23,8 +23,10 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
+
+	
 	// ...
-	UE_LOG(LogTemp, Warning, TEXT("Grabber is here!"));
+	//UE_LOG(LogTemp, Warning, TEXT("Grabber is here!"));
 	//Checking for physics handle
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	if (PhysicsHandle)
@@ -35,6 +37,22 @@ void UGrabber::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Physics handle component on %s"), *GetOwner()->GetName());
 	}
+
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (InputComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Clicky! on %s"), *GetOwner()->GetName());
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+	}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("No Clicky!"));
+	//}
+}
+
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grabber Pressed"));
 }
 
 
