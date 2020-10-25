@@ -36,7 +36,6 @@ void UOpenDoor::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("%s Has OpenDoor.Cpp"), *GetOwner()->GetName());
 	}
 
-	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 
@@ -105,14 +104,15 @@ float UOpenDoor::TotalMassOfActors() const
 	
 	
 	TArray<AActor*> OverlappingActors;
+	if (!PressurePlate) { return TotalMass; }
 	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
-
+	// add their masses
 	for (AActor* Actor : OverlappingActors)
 	{
 		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
 	}
 	
-	// add their masses
+	
 	return TotalMass;
 }
 
