@@ -2,6 +2,7 @@
 
 
 #include "OpenDoor.h"
+#include "Components/AudioComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/PlayerController.h"
@@ -31,13 +32,20 @@ void UOpenDoor::BeginPlay()
 	//TargetYaw = TargetYaw + InitialYaw;
 	TargetYaw += InitialYaw;
 	
-	if (!PressurePlate)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s Has OpenDoor.Cpp"), *GetOwner()->GetName());
-	}
+	PressurePlateLog();
 
+	FindAudioComponent();
 }
 
+
+void UOpenDoor::FindAudioComponent()
+{
+	AudioComponent = GetOwner()->FindComponentByClass<UAudioComponent>();
+	if (!AudioComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *GetOwner()->GetName());
+	}
+}
 
 // Called every frame
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -87,7 +95,16 @@ void UOpenDoor::OpenDoor(float DeltaTime)
 	FRotator DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = CurrentYaw;
 	GetOwner()->SetActorRotation(DoorRotation);
+
+	bCloseDoorSound = false;
+	if (!AudioComponent) { return; }
+	if (!bOpenDoorSound)
+	{
+		AudioComponent->Play();
+		bOpenDoorSound = true;
+	}
 }
+
 
 void UOpenDoor::CloseDoor(float DeltaTime)
 {
@@ -95,6 +112,15 @@ void UOpenDoor::CloseDoor(float DeltaTime)
 	FRotator DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = CurrentYaw;
 	GetOwner()->SetActorRotation(DoorRotation);
+	
+	bOpenDoorSound = false;
+	if (!AudioComponent) { return; }
+
+	if (!bCloseDoorSound)
+	{
+		AudioComponent->Play();
+		bCloseDoorSound = true;
+	}
 }
 
 float UOpenDoor::TotalMassOfActors() const
@@ -116,4 +142,10 @@ float UOpenDoor::TotalMassOfActors() const
 	return TotalMass;
 }
 
-
+void UOpenDoor::PressurePlateLog()
+{
+	if (!PressurePlate)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s Has OpenDoor.Cpp"), *GetOwner()->GetName());
+	}
+}
